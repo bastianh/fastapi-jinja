@@ -5,16 +5,17 @@ from typing import Optional
 
 import fastapi
 from fastapi.templating import Jinja2Templates
+from fastapi_jinja.exceptions import FastAPIJinjaException
 from starlette.requests import Request
 from starlette.routing import get_name
-
-from fastapi_jinja.exceptions import FastAPIJinjaException
 
 template_path: Optional[str] = None
 __templates: Optional[Jinja2Templates] = None
 
 
-def global_init(template_folder: str, auto_reload: bool = False, cache_init: bool = True, **env_options):
+def global_init(
+        template_folder: str, auto_reload: bool = False, cache_init: bool = True, **env_options
+):
     global __templates, template_path
 
     if __templates and cache_init:
@@ -32,6 +33,7 @@ def global_init(template_folder: str, auto_reload: bool = False, cache_init: boo
     __templates = Jinja2Templates(directory=template_folder, **env_options)
     __templates.env.auto_reload = auto_reload
     return __templates.env
+
 
 def clear():
     global __templates, template_path
@@ -96,9 +98,14 @@ def __get_request(*args, **kwargs):
     else:
         return kwargs.get('request', None)
 
+def render_template(template, **kwargs):
+    return __templates.get_template(template).render(**kwargs)
 
 def __render_response(template_file: str, response_val: dict, request: Request, mimetype: str):
 
+def __render_response(
+        template_file: str, response_val: dict, request: Request, mimetype: str
+):
     if isinstance(response_val, fastapi.Response):
         return response_val
 
