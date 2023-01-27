@@ -101,8 +101,6 @@ def __get_request(*args, **kwargs):
 def render_template(template, **kwargs):
     return __templates.get_template(template).render(**kwargs)
 
-def __render_response(template_file: str, response_val: dict, request: Request, mimetype: str):
-
 def __render_response(
         template_file: str, response_val: dict, request: Request, mimetype: str
 ):
